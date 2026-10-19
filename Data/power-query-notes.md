@@ -83,7 +83,51 @@ FactPropertyIndex          CheckYoY
 - CSO_YoYPct: 18% null. The same 55 rows, plus 2005 for the other 9 pairs (no 2004),
   plus 2010 for the 11 late-starting areas (no 2009). 75 / 420 = 18%.
 
-## Still to do
+## DimArea (area lookup table)
 
-- DimArea (area grouping table)
-- DimDate (year table)
+Built by hand with Home → Enter Data. One row per area (14 rows).
+
+| Column | Type | Purpose |
+|---|---|---|
+| Area | Text | Links to FactPropertyIndex[Area]. Spelling copied exactly from the data. |
+| Level | Text | Groups areas so totals are not compared with their own parts. |
+| SortOrder | Whole Number | Controls the order areas appear in charts and slicers (default is alphabetical). |
+
+**Level groups:**
+- **National total:** National, National excluding Dublin
+- **Dublin total:** Dublin
+- **Dublin sub-area:** Dublin City, Dun Laoghaire-Rathdown, Fingal, South Dublin
+- **Region:** Border excluding Louth, Midland, West, Mid-East including Louth,
+  Mid-West including South Tipperary, South-East excluding South Tipperary, South-West
+
+**Why Level matters:**
+- The Dublin Deep-Dive page can filter to Level = "Dublin sub-area".
+- Rankings do not mix totals (National) with parts (Fingal).
+- Note: Dublin is also one of Ireland's 8 official regions. The Regional Comparison
+  page may need to show Dublin together with the 7 regions.
+
+**Check:** 3 columns, 14 rows, 0% errors.
+
+## DimDate (year table)
+
+Built from a blank query using a list of years, then converted to a table.
+
+| Column | Type | Purpose |
+|---|---|---|
+| Year | Whole Number | Links to FactPropertyIndex[Year]. Same type as the fact table, so the relationship works. |
+
+- 21 rows: 2005 to 2025.
+- **Limitation:** the year range is hard-coded (2005–2025). If CSO adds a new year
+  and the data is refreshed, DimDate must be extended by hand.
+
+**Check:** 1 column, 21 rows, 0% errors.
+
+## Final query summary
+
+| Query | Loads into model? | Rows |
+|---|---|---|
+| HPA06_Base | No (shared steps only) | 840 |
+| FactPropertyIndex | Yes | 420 |
+| CheckYoY | Yes | 420 |
+| DimArea | Yes | 14 |
+| DimDate | Yes | 21 |
